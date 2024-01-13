@@ -57,9 +57,6 @@ public class Intersection1 {
         // -------------------------------------------------------------------
         // -------------------------------Lane4--------------------------------
         // --------------------------------------------------------------------
-        DataCar p_4I = new DataCar();
-        p_4I.SetName("P_4I");
-        pn.PlaceList.add(p_4I);
         
         DataCar p_a4 = new DataCar();
         p_a4.SetName("P_a4");
@@ -132,8 +129,6 @@ public class Intersection1 {
         p_o4.SetName("P_o4");
         p_o4.Value.Size = 3;
         pn.PlaceList.add(p_o4);
-        
-      //TODO: check parameters for TransferOperation
         
         DataTransfer p_4E = new DataTransfer();
 		p_4E.SetName("P_4E");
@@ -659,35 +654,17 @@ public class Intersection1 {
 
         t_o5e.Delay = 0;
         pn.Transitions.add(t_o5e);
-        
-     // T_4I ------------------------------------
-        PetriTransition t_4I = new PetriTransition(pn);
-        t_4I.TransitionName = "T_4I";
-        t_4I.InputPlaceName.add("P_4I");
-        
-        Condition T_4ICt1 = new Condition(t_4I, "P_4I", TransitionCondition.NotNull);
-        Condition T_4ICt2 = new Condition(t_4I, "P_a4", TransitionCondition.CanAddCars);
-        T_4ICt1.SetNextCondition(LogicConnector.AND, T_4ICt2);
 
-        GuardMapping grdT_4I = new GuardMapping();
-        grdT_4I.condition= T_4ICt1;
-        grdT_4I.Activations.add(new Activation(t_4I, "P_4I", TransitionOperation.AddElement, "P1"));
-        t_4I.GuardMappingList.add(grdT_4I);
-
-        t_4I.Delay = 0;
-        pn.Transitions.add(t_4I);
-        
-        // TODO check
      // T_4E ------------------------------------
         PetriTransition t_4E = new PetriTransition(pn);
-        t_4E.TransitionName = "T_o4e";
-        t_4E.InputPlaceName.add("P_4E");
+        t_4E.TransitionName = "T_4E";
+        t_4E.InputPlaceName.add("P_o4e");
         
         Condition T_4ECt1 = new Condition(t_4E, "P_o4e", TransitionCondition.NotNull);
 
         GuardMapping grdT_4E = new GuardMapping();
         grdT_4E.condition= T_4ECt1;
-        grdT_4E.Activations.add(new Activation(t_4E, "P_o4e", TransitionOperation.SendOverNetwork, "OP1"));
+        grdT_4E.Activations.add(new Activation(t_4E, "P_o4e", TransitionOperation.SendOverNetwork, "P_4E"));
         t_4E.GuardMappingList.add(grdT_4E);
 
         t_4E.Delay = 0;
