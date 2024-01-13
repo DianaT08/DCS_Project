@@ -27,7 +27,7 @@ public class MiddleStreet {
         
         DataTransfer p_4I = new DataTransfer();
         p_4I.SetName("P_4I");
-        p_4I.Value = new TransferOperation("localhost", "1080" , "P_4I");
+        p_4I.Value = new TransferOperation("localhost", "1080" , "P_a4");
         pn.PlaceList.add(p_4I);
         
         
@@ -49,6 +49,10 @@ public class MiddleStreet {
         p6.SetName("P6");
         pn.PlaceList.add(p6);
         
+        DataCar p10 = new DataCar();
+        p10.SetName("P10");
+        pn.PlaceList.add(p10);
+        
         DataCar p_2E = new DataCar();
         p_2E.SetName("P_2E");
         pn.PlaceList.add(p_2E);
@@ -57,8 +61,9 @@ public class MiddleStreet {
         // -------------------------------Lane2--------------------------------
         // --------------------------------------------------------------------
         
-        DataCar p8 = new DataCar();
+        DataCarQueue p8 = new DataCarQueue();
         p8.SetName("P8");
+        p8.Value.Size = 3;
         pn.PlaceList.add(p8);
         
         DataCar p9 = new DataCar();
@@ -72,7 +77,7 @@ public class MiddleStreet {
         
         DataTransfer p_2I = new DataTransfer();
         p_2I.SetName("P_2I");
-        p_2I.Value = new TransferOperation("localhost", "1082" , "P_2I");
+        p_2I.Value = new TransferOperation("localhost", "1082" , "P_a2");
         pn.PlaceList.add(p_2I);
         
      
@@ -81,19 +86,34 @@ public class MiddleStreet {
         t1.TransitionName = "T1";
         t1.InputPlaceName.add("P2");
 
-        Condition T1Ct1 = new Condition(t1, "P2", TransitionCondition.HaveCarForMe);
+        Condition T1Ct1 = new Condition(t1, "P2", TransitionCondition.HaveCar);
 
         GuardMapping grdT1 = new GuardMapping();
         grdT1.condition= T1Ct1;
-        grdT1.Activations.add(new Activation(t1, "P2", TransitionOperation.SendOverNetwork, "P_4I"));
+        grdT1.Activations.add(new Activation(t1, "P2", TransitionOperation.PopElementWithoutTarget, "P10"));
         t1.GuardMappingList.add(grdT1);
 
         t1.Delay = 0;
         pn.Transitions.add(t1);
         
+     // Tt ------------------------------------
+        PetriTransition tt = new PetriTransition(pn);
+        tt.TransitionName = "Tt";
+        tt.InputPlaceName.add("P10");
+
+        Condition TtCt1 = new Condition(tt, "P10", TransitionCondition.NotNull);
+
+        GuardMapping grdTt = new GuardMapping();
+        grdTt.condition= TtCt1;
+        grdTt.Activations.add(new Activation(tt, "P10", TransitionOperation.SendOverNetwork, "P_4I"));
+        tt.GuardMappingList.add(grdTt);
+
+        tt.Delay = 0;
+        pn.Transitions.add(tt);
+        
      // T2 ------------------------------------
         PetriTransition t2 = new PetriTransition(pn);
-        t2.TransitionName = "T2";
+        t2.TransitionName = "T2m";
         t2.InputPlaceName.add("P3");
 
         Condition T2Ct1 = new Condition(t2, "P3", TransitionCondition.HaveCarForMe);
@@ -147,11 +167,11 @@ public class MiddleStreet {
         t5.TransitionName = "T5";
         t5.InputPlaceName.add("P3");
 
-        Condition T5Ct1 = new Condition(t5, "P3", TransitionCondition.HaveCarForMe);
+        Condition T5Ct1 = new Condition(t5, "P3", TransitionCondition.HaveCar);
 
         GuardMapping grdT5 = new GuardMapping();
         grdT5.condition= T5Ct1;
-        grdT5.Activations.add(new Activation(t5, "P3", TransitionOperation.PopElementWithTarget, "P6"));
+        grdT5.Activations.add(new Activation(t5, "P3", TransitionOperation.PopElementWithoutTarget, "P6"));
         t5.GuardMappingList.add(grdT5);
 
         t5.Delay = 0;
@@ -163,6 +183,9 @@ public class MiddleStreet {
         t6.InputPlaceName.add("P_4E");
 
         Condition T6Ct1 = new Condition(t6, "P_4E", TransitionCondition.NotNull);
+        Condition T6Ct2 = new Condition(t6, "P8", TransitionCondition.CanAddCars);
+        
+        T6Ct1.SetNextCondition(LogicConnector.AND, T6Ct2);
 
         GuardMapping grdT6 = new GuardMapping();
         grdT6.condition= T6Ct1;
@@ -177,11 +200,11 @@ public class MiddleStreet {
         t7.TransitionName = "T7";
         t7.InputPlaceName.add("P8");
 
-        Condition T7Ct1 = new Condition(t7, "P8", TransitionCondition.NotNull);
+        Condition T7Ct1 = new Condition(t7, "P8", TransitionCondition.HaveCar);
 
         GuardMapping grdT7 = new GuardMapping();
         grdT7.condition= T7Ct1;
-        grdT7.Activations.add(new Activation(t7, "P8", TransitionOperation.AddElement, "P9"));
+        grdT7.Activations.add(new Activation(t7, "P8", TransitionOperation.PopElementWithoutTarget, "P9"));
         t7.GuardMappingList.add(grdT7);
 
         t7.Delay = 0;
